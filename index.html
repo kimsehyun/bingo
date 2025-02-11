@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>랜덤 빙고</title>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        table {
+            border-collapse: collapse;
+            width: 90vw;
+            height: 90vh;
+        }
+        td {
+            width: 20%;
+            height: 20%;
+            text-align: center;
+            font-size: 5vw;
+            font-weight: bold;
+            border: 2px solid black;
+            cursor: pointer;
+            position: relative;
+        }
+        .clicked::after {
+            content: "\2665"; /* 하트 유니코드 */
+            font-size: 8vw; /* 하트를 크게 설정 */
+            color: rgba(255, 0, 0, 0.5); /* 연한 빨간색 */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #bingo-count {
+            text-align: center;
+            font-size: 5vw;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <table id="bingo-board"></table>
+    <div id="bingo-count">빙고 개수: 0</div>
+    <script>
+        function generateBingoBoard() {
+            const numbers = [...Array(30).keys()].map(n => n + 1).sort(() => Math.random() - 0.5).slice(0, 25);
+            const table = document.getElementById("bingo-board");
+            table.innerHTML = "";
+            
+            let index = 0;
+            for (let i = 0; i < 5; i++) {
+                let row = document.createElement("tr");
+                for (let j = 0; j < 5; j++) {
+                    let cell = document.createElement("td");
+                    cell.textContent = numbers[index++];
+                    cell.addEventListener("click", function() {
+                        this.classList.toggle("clicked");
+                        updateBingoCount();
+                    });
+                    row.appendChild(cell);
+                }
+                table.appendChild(row);
+            }
+        }
+        
+        function updateBingoCount() {
+            let board = [...document.querySelectorAll("#bingo-board tr")].map(row => [...row.children]);
+            let bingoCount = 0;
+
+            // Check rows
+            for (let i = 0; i < 5; i++) {
+                if (board[i].every(cell => cell.classList.contains("clicked"))) {
+                    bingoCount++;
+                }
+            }
+
+            // Check columns
+            for (let j = 0; j < 5; j++) {
+                if (board.map(row => row[j]).every(cell => cell.classList.contains("clicked"))) {
+                    bingoCount++;
+                }
+            }
+
+            // Check diagonals
+            if ([0, 1, 2, 3, 4].every(i => board[i][i].classList.contains("clicked"))) {
+                bingoCount++;
+            }
+            if ([0, 1, 2, 3, 4].every(i => board[i][4 - i].classList.contains("clicked"))) {
+                bingoCount++;
+            }
+
+            document.getElementById("bingo-count").textContent = "빙고 개수: " + bingoCount;
+        }
+        
+        window.onload = generateBingoBoard;
+    </script>
+</body>
+</html>
