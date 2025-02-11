@@ -6,25 +6,26 @@
     <title>랜덤 빙고</title>
     <style>
         html, body {
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
         table {
             border-collapse: collapse;
-            width: 90vw;
-            height: 90vh;
+            width: 100vw;
+            height: 80vh;
         }
         td {
-            width: 20%;
-            height: 20%;
+            width: 20vw;
+            height: 16vh;
             text-align: center;
-            font-size: 5vw;
+            font-size: 6vw;
             font-weight: bold;
             border: 2px solid black;
             cursor: pointer;
@@ -32,7 +33,7 @@
         }
         .clicked::after {
             content: "\2665"; /* 하트 유니코드 */
-            font-size: 8vw; /* 하트를 크게 설정 */
+            font-size: 9vw; /* 하트를 크게 설정 */
             color: rgba(255, 0, 0, 0.5); /* 연한 빨간색 */
             position: absolute;
             top: 50%;
@@ -41,8 +42,8 @@
         }
         #bingo-count {
             text-align: center;
-            font-size: 5vw;
-            margin-top: 10px;
+            font-size: 4vw;
+            margin-top: 1vh;
         }
     </style>
 </head>
