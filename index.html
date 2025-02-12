@@ -32,17 +32,14 @@
             position: relative;
         }
         .clicked::after {
-            content: "\1F43E"; /* 고양이 발자국 유니코드 */
-            font-size: 9vw; /* 발자국 크기 조정 */
-            color: rgba(255, 0, 0, 0.5); /* 연한 빨간색 */
+            content: "\2764"; /* 빨간색 하트 유니코드 */
+            font-size: 9vw; /* 하트 크기 조정 */
+            color: rgba(255, 0, 0, 0.7); /* 연한 빨간색 */
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             display: block;
-        }
-        td.clicked::after ~ .clicked::after {
-            display: none; /* 클릭된 셀 중 하나만 발자국 표시 */
         }
         #bingo-count {
             text-align: center;
@@ -53,10 +50,13 @@
     </style>
 </head>
 <body>
+    <div id="player-name" style="font-size: 3vw; margin-bottom: 1vh;"></div>
     <table id="bingo-board"></table>
     <div id="bingo-count">빙고 개수: 0</div>
     <script>
         let gameOver = false;
+        let playerName = prompt("게임하는 사람의 이름을 입력하세요:") || "플레이어";
+        document.getElementById("player-name").textContent = playerName + "의 빙고 게임";
         
         function generateBingoBoard() {
             const numbers = [...Array(50).keys()].map(n => n + 1).sort(() => Math.random() - 0.5).slice(0, 25);
@@ -113,7 +113,7 @@
             if (bingoCount >= 5) {
                 gameOver = true;
                 setTimeout(() => {
-                    alert("축하합니다! 빙고 5개를 완성했습니다!");
+                    alert(playerName + "님, 축하합니다! 빙고 5개를 완성했습니다!");
                 }, 100); // 빙고판 갱신 후 메시지 띄우기
             }
         }
