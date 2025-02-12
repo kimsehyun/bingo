@@ -9,21 +9,30 @@
             width: 100vw;
             height: 100vh;
             margin: 0;
-            padding: 0;
+            padding: 1px 0 0 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             overflow: hidden;
         }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100vw;
+            padding: 1vh 2vw;
+            font-size: 3vw;
+            font-weight: bold;
+        }
         table {
             border-collapse: collapse;
             width: 100vw;
-            height: 85vh;
+            height: 90vh;
         }
         td {
             width: 20vw;
-            height: 17vh;
+            height: 18vh;
             text-align: center;
             font-size: 4vw;
             font-weight: bold;
@@ -41,18 +50,14 @@
             transform: translate(-50%, -50%);
             display: block;
         }
-        #bingo-count {
-            text-align: center;
-            font-size: 4vw;
-            margin-top: 1vh;
-            height: 5vh;
-        }
     </style>
 </head>
 <body>
-    <div id="player-name" style="font-size: 3vw; margin-bottom: 1vh;"></div>
+    <div class="header">
+        <div id="player-name"></div>
+        <div id="bingo-count">빙고 개수: 0</div>
+    </div>
     <table id="bingo-board"></table>
-    <div id="bingo-count">빙고 개수: 0</div>
     <script>
         let gameOver = false;
         let playerName = prompt("게임하는 사람의 이름을 입력하세요:") || "플레이어";
