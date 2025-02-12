@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>랜덤 빙고</title>
+    <title>빙고</title>
     <style>
         html, body {
             width: 100vw;
@@ -22,19 +22,19 @@
             align-items: center;
             width: 100vw;
             padding: 1vh 2vw;
-            font-size: 3vw;
+            font-size: 2.5vw;
             font-weight: bold;
         }
         table {
             border-collapse: collapse;
-            width: 100vw;
-            height: calc(100vh - 10vh); /* 화면 전체 높이에 맞춤 */
+            width: 95vw;
+            height: 80vh; /* 전체 높이 조정 */
         }
         td {
-            width: 20vw;
-            height: 19vh; /* 높이 조정 */
+            width: 18vw;
+            height: 14vh; /* 더 작은 셀 크기 */
             text-align: center;
-            font-size: 4vw;
+            font-size: 3.5vw;
             font-weight: bold;
             border: 2px solid black;
             cursor: pointer;
@@ -42,7 +42,7 @@
         }
         .clicked::after {
             content: "\2764"; /* 빨간색 하트 유니코드 */
-            font-size: 9vw;
+            font-size: 8vw;
             color: rgba(255, 0, 0, 0.7);
             position: absolute;
             top: 50%;
