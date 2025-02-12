@@ -39,6 +39,10 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            display: block;
+        }
+        td.clicked::after ~ .clicked::after {
+            display: none; /* 클릭된 셀 중 하나만 발자국 표시 */
         }
         #bingo-count {
             text-align: center;
@@ -108,7 +112,9 @@
             
             if (bingoCount >= 5) {
                 gameOver = true;
-                alert("축하합니다! 빙고 5개를 완성했습니다!");
+                setTimeout(() => {
+                    alert("축하합니다! 빙고 5개를 완성했습니다!");
+                }, 100); // 빙고판 갱신 후 메시지 띄우기
             }
         }
         
