@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>랜덤 빙고</title>
+    <title>빙고</title>
     <style>
         html, body {
             width: 100vw;
@@ -59,8 +60,31 @@
     </div>
     <table id="bingo-board"></table>
     <script>
+        function setCookie(name, value, days) {
+            let date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = name + "=" + value + ";expires=" + date.toUTCString() + ";path=/";
+        }
+
+        function getCookie(name) {
+            let cookies = document.cookie.split("; ");
+            for (let i = 0; i < cookies.length; i++) {
+                let parts = cookies[i].split("=");
+                if (parts[0] === name) {
+                    return parts[1];
+                }
+            }
+            return "";
+        }
+
         let gameOver = false;
-        let playerName = prompt("게임하는 사람의 이름을 입력하세요:") || "플레이어";
+        let playerName = getCookie("playerName");
+        
+        if (!playerName) {
+            playerName = prompt("게임하는 사람의 이름을 입력하세요:") || "플레이어";
+            setCookie("playerName", playerName, 1); // 1일 동안 저장
+        }
+        
         document.getElementById("player-name").textContent = playerName + "의 빙고 게임";
         
         function generateBingoBoard() {
