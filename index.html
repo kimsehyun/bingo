@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>빙고</title>
+    <title>랜덤 빙고</title>
     <style>
         html, body {
             width: 100vw;
@@ -29,7 +28,7 @@
         table {
             border-collapse: collapse;
             width: 92vw;
-            height: 75vh;
+            height: 70vh;
         }
         td {
             width: 17.5vw;
@@ -51,6 +50,14 @@
             transform: translate(-50%, -50%);
             display: block;
         }
+        #clicked-numbers {
+            margin-top: 1vh;
+            font-size: 2vw;
+            font-weight: bold;
+            text-align: center;
+            width: 90vw;
+            min-height: 5vh;
+        }
     </style>
 </head>
 <body>
@@ -59,6 +66,7 @@
         <div id="bingo-count">빙고 개수: 0</div>
     </div>
     <table id="bingo-board"></table>
+    <div id="clicked-numbers">클릭한 숫자: 없음</div>
     <script>
         function setCookie(name, value, days) {
             let date = new Date();
@@ -78,6 +86,7 @@
         }
 
         let gameOver = false;
+        let clickedNumbers = [];
         let playerName = getCookie("playerName");
         
         if (!playerName) {
@@ -91,6 +100,8 @@
             const numbers = [...Array(50).keys()].map(n => n + 1).sort(() => Math.random() - 0.5).slice(0, 25);
             const table = document.getElementById("bingo-board");
             table.innerHTML = "";
+            clickedNumbers = [];
+            document.getElementById("clicked-numbers").textContent = "클릭한 숫자: 없음";
             gameOver = false;
             
             let index = 0;
@@ -102,6 +113,7 @@
                     cell.addEventListener("click", function() {
                         if (!gameOver) {
                             this.classList.toggle("clicked");
+                            updateClickedNumbers(this.textContent);
                             updateBingoCount();
                         }
                     });
@@ -109,6 +121,16 @@
                 }
                 table.appendChild(row);
             }
+        }
+        
+        function updateClickedNumbers(number) {
+            let index = clickedNumbers.indexOf(number);
+            if (index === -1) {
+                clickedNumbers.push(number);
+            } else {
+                clickedNumbers.splice(index, 1);
+            }
+            document.getElementById("clicked-numbers").textContent = "클릭한 숫자: " + (clickedNumbers.length ? clickedNumbers.join(", ") : "없음");
         }
         
         function updateBingoCount() {
