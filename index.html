@@ -6,8 +6,6 @@
 	<title>랜덤 빙고</title>
 	<style>
 		html, body {
-			width: 100vw;
-			height: 100vh;
 			margin: 0;
 			padding: 0;
 			display: flex;
@@ -21,8 +19,6 @@
 			flex-direction: column;
 			align-items: center;
 			justify-content: flex-start;
-			width: 100vw;
-			height: 100vh;
 			padding:20px;
 			box-sizing: border-box;
 			position: relative;
@@ -88,8 +84,16 @@
 	</div>
 	<table id="bingo-board"></table>
 	<div id="clicked-numbers">클릭한 숫자: 없음</div>
+	<button type="button" onclick="resetGame()">다시하기</button>
 </div>
 <script>
+	
+	function resetGame() {
+		if(confirm('게임을 다시 하시겠습니까?')){
+			generateBingoBoard();
+		}
+	}
+	
 	let gameOver = false;
 	let clickedNumbers = [];
 	
@@ -121,6 +125,7 @@
 		table.innerHTML = "";
 		clickedNumbers = [];
 		gameOver = false;
+		document.getElementById("clicked-numbers").textContent = "클릭한 숫자: 없음";
 		
 		let index = 0;
 		for (let i = 0; i < 5; i++) {
