@@ -126,6 +126,7 @@
 		clickedNumbers = [];
 		gameOver = false;
 		document.getElementById("clicked-numbers").textContent = "클릭한 숫자: 없음";
+		document.getElementById("bingo-count").textContent = "빙고 개수: 0";
 		document.querySelectorAll(".bingo-line").forEach(line => line.remove());
 		
 		let index = 0;
