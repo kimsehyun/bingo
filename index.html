@@ -1,172 +1,205 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>랜덤 빙고</title>
-    <style>
-        html, body {
-            width: 100vw;
-            height: 100vh;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            overflow: hidden;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100vw;
-            padding: 0.5vh 2vw;
-            font-size: 2vw;
-            font-weight: bold;
-        }
-        table {
-            border-collapse: collapse;
-            width: 92vw;
-            height: 70vh;
-        }
-        td {
-            width: 17.5vw;
-            height: 13vh;
-            text-align: center;
-            font-size: 3vw;
-            font-weight: bold;
-            border: 2px solid black;
-            cursor: pointer;
-            position: relative;
-        }
-        .clicked::after {
-            content: "\2661"; /* 빈 하트 유니코드 */
-            font-size: 6vw;
-            color: rgba(0, 0, 0, 0.2); /* 연한 검정색으로 변경 */
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: block;
-        }
-        #clicked-numbers {
-            margin-top: 1vh;
-            font-size: 2vw;
-            font-weight: bold;
-            text-align: center;
-            width: 90vw;
-            min-height: 5vh;
-        }
-    </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<title>랜덤 빙고</title>
+	<style>
+		html, body {
+			width: 100vw;
+			height: 100vh;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: flex-start;
+			overflow: hidden;
+		}
+		#wrapper {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: flex-start;
+			width: 100vw;
+			height: 100vh;
+			padding:20px;
+			box-sizing: border-box;
+			position: relative;
+		}
+		.header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+			padding: 0 2vw 1vh;
+			font-size: 2vw;
+			font-weight: bold;
+		}
+		table {
+			border-collapse: collapse;
+			width: 100%;
+			height: 70vh;
+			position: relative;
+		}
+		td {
+			width: 17.5vw;
+			height: 13vh;
+			text-align: center;
+			font-size: 3vw;
+			font-weight: bold;
+			border: 2px solid black;
+			cursor: pointer;
+			position: relative;
+		}
+		.clicked::after {
+			content: "\2661";
+			font-size: 6vw;
+			color: rgba(0, 0, 0, 0.2);
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			display: block;
+		}
+		.bingo-line {
+			position: absolute;
+			background-color: rgba(255,0,0,0.5);
+			height: 5px;
+			border-radius: 3px;
+			z-index: 2;
+			transform-origin: 0;
+		}
+		#clicked-numbers {
+			margin-top: 1vh;
+			font-size: 2vw;
+			font-weight: bold;
+			text-align: center;
+			width: 90vw;
+			min-height: 5vh;
+		}
+	</style>
 </head>
 <body>
-    <div class="header">
-        <div id="player-name"></div>
-        <div id="bingo-count">빙고 개수: 0</div>
-    </div>
-    <table id="bingo-board"></table>
-    <div id="clicked-numbers">클릭한 숫자: 없음</div>
-    <script>
-        function setCookie(name, value, days) {
-            let date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            document.cookie = name + "=" + value + ";expires=" + date.toUTCString() + ";path=/";
-        }
-
-        function getCookie(name) {
-            let cookies = document.cookie.split("; ");
-            for (let i = 0; i < cookies.length; i++) {
-                let parts = cookies[i].split("=");
-                if (parts[0] === name) {
-                    return parts[1];
-                }
-            }
-            return "";
-        }
-
-        let gameOver = false;
-        let clickedNumbers = [];
-        let playerName = getCookie("playerName");
-        
-        if (!playerName) {
-            playerName = prompt("게임하는 사람의 이름을 입력하세요:") || "플레이어";
-            setCookie("playerName", playerName, 1);
-        }
-        
-        document.getElementById("player-name").textContent = playerName + "의 빙고 게임";
-        
-        function generateBingoBoard() {
-            const numbers = [...Array(50).keys()].map(n => n + 1).sort(() => Math.random() - 0.5).slice(0, 25);
-            const table = document.getElementById("bingo-board");
-            table.innerHTML = "";
-            clickedNumbers = [];
-            document.getElementById("clicked-numbers").textContent = "클릭한 숫자: 없음";
-            gameOver = false;
-            
-            let index = 0;
-            for (let i = 0; i < 5; i++) {
-                let row = document.createElement("tr");
-                for (let j = 0; j < 5; j++) {
-                    let cell = document.createElement("td");
-                    cell.textContent = numbers[index++];
-                    cell.addEventListener("click", function() {
-                        if (!gameOver) {
-                            this.classList.toggle("clicked");
-                            updateClickedNumbers(this.textContent);
-                            updateBingoCount();
-                        }
-                    });
-                    row.appendChild(cell);
-                }
-                table.appendChild(row);
-            }
-        }
-        
-        function updateClickedNumbers(number) {
-            let index = clickedNumbers.indexOf(number);
-            if (index === -1) {
-                clickedNumbers.push(number);
-            } else {
-                clickedNumbers.splice(index, 1);
-            }
-            document.getElementById("clicked-numbers").textContent = "클릭한 숫자: " + (clickedNumbers.length ? clickedNumbers.join(", ") : "없음");
-        }
-        
-        function updateBingoCount() {
-            let board = [...document.querySelectorAll("#bingo-board tr")].map(row => [...row.children]);
-            let bingoCount = 0;
-
-            for (let i = 0; i < 5; i++) {
-                if (board[i].every(cell => cell.classList.contains("clicked"))) {
-                    bingoCount++;
-                }
-            }
-
-            for (let j = 0; j < 5; j++) {
-                if (board.map(row => row[j]).every(cell => cell.classList.contains("clicked"))) {
-                    bingoCount++;
-                }
-            }
-
-            if ([0, 1, 2, 3, 4].every(i => board[i][i].classList.contains("clicked"))) {
-                bingoCount++;
-            }
-            if ([0, 1, 2, 3, 4].every(i => board[i][4 - i].classList.contains("clicked"))) {
-                bingoCount++;
-            }
-
-            document.getElementById("bingo-count").textContent = "빙고 개수: " + bingoCount;
-            
-            if (bingoCount >= 5) {
-                gameOver = true;
-                setTimeout(() => {
-                    alert(playerName + "님, 축하합니다! 빙고 5개를 완성했습니다!");
-                }, 100);
-            }
-        }
-        
-        window.onload = generateBingoBoard;
-    </script>
+<div id="wrapper">
+	<div class="header">
+		<div id="player-name"></div>
+		<div id="bingo-count">빙고 개수: 0</div>
+	</div>
+	<table id="bingo-board"></table>
+	<div id="clicked-numbers">클릭한 숫자: 없음</div>
+</div>
+<script>
+	let gameOver = false;
+	let clickedNumbers = [];
+	
+	function setCookie(name, value, days) {
+		let date = new Date();
+		date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+		document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/;SameSite=None;Secure`;
+	}
+	
+	function getCookie(name) {
+		let cookies = document.cookie.split('; ');
+		for (let cookie of cookies) {
+			let [key, value] = cookie.split('=');
+			if (key === name) return value;
+		}
+		return "";
+	}
+	
+	let playerName = getCookie("playerName");
+	if (!playerName) {
+		playerName = prompt("게임하는 사람의 이름을 입력하세요:") || "플레이어";
+		setCookie("playerName", playerName, 1);
+	}
+	document.getElementById("player-name").textContent = playerName + "의 빙고 게임";
+	
+	function generateBingoBoard() {
+		const numbers = [...Array(50).keys()].map(n => n + 1).sort(() => Math.random() - 0.5).slice(0, 25);
+		const table = document.getElementById("bingo-board");
+		table.innerHTML = "";
+		clickedNumbers = [];
+		gameOver = false;
+		
+		let index = 0;
+		for (let i = 0; i < 5; i++) {
+			let row = document.createElement("tr");
+			for (let j = 0; j < 5; j++) {
+				let cell = document.createElement("td");
+				cell.textContent = numbers[index++];
+				cell.addEventListener("click", function() {
+					if (!gameOver) {
+						this.classList.toggle("clicked");
+						updateClickedNumbers(this.textContent);
+						updateBingoCount();
+					}
+				});
+				row.appendChild(cell);
+			}
+			table.appendChild(row);
+		}
+	}
+	
+	function updateClickedNumbers(number) {
+		let index = clickedNumbers.indexOf(number);
+		if (index === -1) clickedNumbers.push(number);
+		else clickedNumbers.splice(index, 1);
+		document.getElementById("clicked-numbers").textContent = "클릭한 숫자: " + (clickedNumbers.length ? clickedNumbers.join(", ") : "없음");
+	}
+	
+	function drawLine(cellStart, cellEnd) {
+		const start = cellStart.getBoundingClientRect();
+		const end = cellEnd.getBoundingClientRect();
+		const wrapper = document.getElementById("wrapper").getBoundingClientRect();
+		
+		const line = document.createElement("div");
+		line.classList.add("bingo-line");
+		line.style.width = Math.sqrt((end.x - start.x) ** 2 + (end.y - start.y) ** 2) + "px";
+		line.style.top = (start.y - wrapper.y + start.height / 2) + "px";
+		line.style.left = (start.x - wrapper.x + start.width / 2) + "px";
+		line.style.transform = `rotate(${Math.atan2(end.y - start.y, end.x - start.x)}rad)`;
+		document.getElementById("wrapper").appendChild(line);
+	}
+	
+	function updateBingoCount() {
+		document.querySelectorAll('.bingo-line').forEach(line => line.remove());
+		let board = [...document.querySelectorAll("#bingo-board tr")].map(row => [...row.children]);
+		let bingoCount = 0;
+		
+		for (let i = 0; i < 5; i++) {
+			if (board[i].every(cell => cell.classList.contains("clicked"))) {
+				bingoCount++;
+				drawLine(board[i][0], board[i][4]);
+			}
+		}
+		
+		for (let j = 0; j < 5; j++) {
+			if (board.map(row => row[j]).every(cell => cell.classList.contains("clicked"))) {
+				bingoCount++;
+				drawLine(board[0][j], board[4][j]);
+			}
+		}
+		
+		if ([0, 1, 2, 3, 4].every(i => board[i][i].classList.contains("clicked"))) {
+			bingoCount++;
+			drawLine(board[0][0], board[4][4]);
+		}
+		
+		if ([0, 1, 2, 3, 4].every(i => board[i][4 - i].classList.contains("clicked"))) {
+			bingoCount++;
+			drawLine(board[0][4], board[4][0]);
+		}
+		
+		document.getElementById("bingo-count").textContent = "빙고 개수: " + bingoCount;
+		
+		if (bingoCount >= 5) {
+			gameOver = true;
+			setTimeout(() => alert(playerName + "님, 축하합니다! 빙고 5개를 완성했습니다!"), 100);
+		}
+	}
+	
+	window.onload = generateBingoBoard;
+</script>
 </body>
 </html>
